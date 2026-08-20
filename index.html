@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Prácticas — Luis Cortés Muñoz</title>
+  <meta name="description" content="Portafolio de prácticas de Luis Cortés Muñoz: documentación, metodología y evidencias de los resultados obtenidos.">
+  <meta name="author" content="Luis Cortés Muñoz">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%2316a34a'/><text x='50' y='68' font-size='54' font-family='sans-serif' font-weight='bold' fill='white' text-anchor='middle'>LC</text></svg>">
+</head>
+<body>
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html">
+        <span class="brand__mark">LC</span>
+        <span class="brand__text">
+          Prácticas
+          <small>Luis Cortés Muñoz</small>
+        </span>
+      </a>
+
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="nav-links">
+        ☰ <span class="sr-only">Menú</span>
+      </button>
+
+      <ul class="nav__links" id="nav-links">
+        <li><a class="is-active" href="index.html">Inicio</a></li>
+        <li><a href="#practicas">Prácticas</a></li>
+        <li><a href="#perfil">Sobre mí</a></li>
+        <li><a class="btn btn--primary btn--sm" href="practica-1.html">Práctica 1</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero">
+      <div class="container hero__grid">
+        <div>
+          <span class="eyebrow">Portafolio de prácticas</span>
+          <h1>Documentación y organización de mis prácticas</h1>
+          <p class="lead">
+            Aquí se documentan las prácticas realizadas, incluyendo el desarrollo,
+            la metodología y las evidencias de los resultados obtenidos.
+          </p>
+          <div class="hero__actions">
+            <a class="btn btn--primary" href="practica-1.html">Ver Práctica 1 →</a>
+            <a class="btn btn--ghost" href="#practicas">Explorar el índice</a>
+          </div>
+        </div>
+
+        <aside class="profile" id="perfil">
+          <div class="profile__head">
+            <span class="avatar" aria-hidden="true">LC</span>
+            <div>
+              <h2>Luis Cortés Muñoz</h2>
+              <span>Universidad Iberoamericana</span>
+            </div>
+          </div>
+          <p>
+            Estudiante de décimo semestre de Ingeniería en Mecatrónica y Sistemas Ciberfísicos
+            en la Universidad Iberoamericana. Actualmente trabajo en PepsiCo en el área de
+            Cadena de Suministro, específicamente en Planeación.
+          </p>
+          <div class="tag-row">
+            <span class="tag">Mecatrónica</span>
+            <span class="tag">Sistemas Ciberfísicos</span>
+            <span class="tag">Décimo semestre</span>
+            <span class="tag">Cadena de Suministro</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============ ÍNDICE DE PRÁCTICAS ============ -->
+    <section class="section" id="practicas">
+      <div class="container">
+        <div class="section__head">
+          <span class="section-number">Contenido</span>
+          <h2>Índice de prácticas</h2>
+          <p>Cada práctica se publica como una página independiente con su desarrollo, componentes y evidencias.</p>
+        </div>
+
+        <div class="practices">
+
+          <!-- Práctica 1 -->
+          <article class="practice practice--ready">
+            <span class="practice__num">01</span>
+            <span class="badge badge--ready">Publicada</span>
+            <h3><a class="practice__link" href="practica-1.html">Equipo de cómputo con presupuesto</a></h3>
+            <p>Selección de equipo de cómputo con presupuesto definido: propuesta con límite de $25,000 y propuesta sin límite.</p>
+          </article>
+
+          <!-- Plantilla para próximas prácticas: duplica este bloque y actualiza el contenido -->
+          <article class="practice practice--soon">
+            <span class="practice__num">02</span>
+            <span class="badge badge--soon">Próximamente</span>
+            <h3>Práctica 2</h3>
+            <p>Espacio reservado para la siguiente práctica del curso.</p>
+          </article>
+
+          <article class="practice practice--soon">
+            <span class="practice__num">03</span>
+            <span class="badge badge--soon">Próximamente</span>
+            <h3>Práctica 3</h3>
+            <p>Espacio reservado para la siguiente práctica del curso.</p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>© <span id="year">2026</span> Luis Cortés Muñoz · Universidad Iberoamericana</span>
+      <a href="practica-1.html">Práctica 1 →</a>
+    </div>
+  </footer>
+
+  <button class="to-top" type="button" aria-label="Volver arriba">↑</button>
+
+  <script src="assets/js/main.js"></script>
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>
