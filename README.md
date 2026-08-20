@@ -8,10 +8,9 @@ Sitio estático (HTML + CSS + JS, sin dependencias externas), listo para publica
 
 ```
 index.html            Portada: perfil e índice de prácticas
-practica-1.html       Práctica 1 — Equipo de cómputo con presupuesto
+practica-1.html       Práctica 1 — Representaciones 3D en Unity y Blender
 assets/css/styles.css Estilos (paleta verde, modo claro y oscuro, responsive)
 assets/js/main.js     Menú móvil y botón "volver arriba"
-assets/img/practica-1 Imágenes de la Práctica 1
 assets/videos         Videos de las representaciones en Unity y Blender
 ```
 
