@@ -555,6 +555,36 @@ p  { margin: 0 0 1rem; }
   letter-spacing: -0.02em;
 }
 
+/* ---------- Videos ---------- */
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 1.25rem;
+}
+
+.video-card {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.video-card video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #06180f;
+  display: block;
+  border-bottom: 1px solid var(--border);
+}
+
+.video-card figcaption { padding: 1.15rem 1.25rem 1.35rem; }
+.video-card figcaption h3 { margin: .15rem 0 .5rem; }
+.video-card figcaption p { margin: 0; font-size: .93rem; color: var(--text-soft); }
+
 /* ---------- Bloque de referencia / nota ---------- */
 .note {
   display: flex;
