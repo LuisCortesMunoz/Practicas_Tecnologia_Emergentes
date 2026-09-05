@@ -663,3 +663,32 @@ p  { margin: 0 0 1rem; }
   * { transition: none !important; animation: none !important; }
   html { scroll-behavior: auto; }
 }
+
+/* ---------- Fotografía de perfil ---------- */
+.brand__mark--photo {
+  display: block;
+  object-fit: cover;
+  object-position: 62% 30%;
+  background: var(--surface-soft);
+  padding: 0;
+}
+
+.avatar--photo {
+  display: block;
+  object-fit: cover;
+  object-position: 62% 30%;
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+}
+
+/* ---------- Tarjetas de pasos (proceso) ---------- */
+.card--step { cursor: default; }
+.card--step:hover { transform: none; box-shadow: var(--shadow-sm); }
+.card--step .card__body { padding-bottom: 1.2rem; }
+.card--step .card__body p { margin: 0; font-size: .93rem; color: var(--text-soft); }
+
+/* Rejilla de video con una sola pieza de evidencia */
+.video-grid--single { max-width: 840px; margin-inline: auto; }

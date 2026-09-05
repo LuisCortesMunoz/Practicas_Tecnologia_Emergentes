@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Práctica 2 · Prácticas Tecnologías Emergentes</title>
+  <meta name="description" content="Práctica 2: animaciones en Unity — rueda de la fortuna, cabinas con prefab, carros, cámara y sincronización en el Animator.">
+  <meta name="author" content="Luis Cortés Muñoz">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="icon" href="assets/img/perfil.jpg">
+</head>
+<body>
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html">
+        <img class="brand__mark brand__mark--photo" src="assets/img/perfil.jpg" alt="Luis Cortés Muñoz">
+        <span class="brand__text">
+          Tecnologías Emergentes
+          <small>Luis Cortés Muñoz</small>
+        </span>
+      </a>
+
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="nav-links">☰</button>
+
+      <ul class="nav__links" id="nav-links">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="index.html#practicas">Prácticas</a></li>
+        <li><a href="practica-1.html">Práctica 1</a></li>
+        <li><a class="is-active" href="practica-2.html">Práctica 2</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ ENCABEZADO ============ -->
+    <section class="page-hero">
+      <div class="container">
+        <p class="breadcrumb"><a href="index.html">Inicio</a> / <a href="index.html#practicas">Prácticas</a> / Práctica 2</p>
+        <span class="eyebrow">Práctica 2</span>
+        <h1>Animaciones en Unity</h1>
+        <p class="lead" style="color: var(--text-soft); max-width: 62ch;">
+          Animación de la escena del parque de diversiones: movimiento de la rueda de la
+          fortuna, sus cabinas, los carros y un recorrido de cámara, todo sincronizado
+          desde el Animator.
+        </p>
+      </div>
+    </section>
+
+    <!-- ============ PROCESO ============ -->
+    <section class="section" id="proceso">
+      <div class="container">
+        <div class="section__head">
+          <span class="section-number">Desarrollo</span>
+          <h2>Proceso realizado</h2>
+          <p>Las animaciones se construyeron de forma progresiva, partiendo del elemento principal hasta llegar a la sincronización de toda la escena.</p>
+        </div>
+
+        <div class="cards">
+
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Paso 01</span>
+              <h3>Rueda de la fortuna</h3>
+              <p>Se animó la rueda principal para que ejecutara su movimiento de rotación continuo.</p>
+            </div>
+          </article>
+
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Paso 02</span>
+              <h3>Cabina</h3>
+              <p>Se animó una de las cabinas sincronizando su tiempo y movimiento con el de la rueda, para que mantuviera una posición natural mientras gira.</p>
+            </div>
+          </article>
+
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Paso 03</span>
+              <h3>Prefab de la cabina</h3>
+              <p>Con la primera cabina ya configurada se creó un prefab, lo que permitió replicar sus características y comportamiento en el resto sin configurarlas desde cero.</p>
+            </div>
+          </article>
+
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Paso 04</span>
+              <h3>Carros</h3>
+              <p>Se realizaron las animaciones correspondientes a los carros de la atracción.</p>
+            </div>
+          </article>
+
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Paso 05</span>
+              <h3>Cámara</h3>
+              <p>Se animó la cámara para simular un recorrido por el parque y mostrar la escena desde diferentes ángulos.</p>
+            </div>
+          </article>
+
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Paso 06</span>
+              <h3>Sincronización</h3>
+              <p>En el Animator se agregaron y configuraron todos los elementos para que las animaciones iniciaran desde el arranque y se ejecutaran al mismo tiempo, y no una después de otra.</p>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ VIDEO ============ -->
+    <section class="section section--alt" id="evidencia">
+      <div class="container">
+        <div class="section__head">
+          <span class="section-number">Evidencia</span>
+          <h2>Resultado final</h2>
+          <p>Recorrido de la escena con todas las animaciones ejecutándose de forma simultánea.</p>
+        </div>
+
+        <div class="video-grid video-grid--single">
+          <figure class="video-card">
+            <video controls preload="metadata" playsinline>
+              <source src="assets/videos/animaciones-parque.mp4" type="video/mp4">
+              Tu navegador no admite la reproducción de video.
+              <a href="assets/videos/animaciones-parque.mp4">Descargar el video</a>.
+            </video>
+            <figcaption>
+              <span class="card__kicker">Unity</span>
+              <h3>Animaciones del parque de diversiones</h3>
+              <p>
+                Rueda de la fortuna en rotación, cabinas y carros en movimiento, y el
+                recorrido de la cámara sobre la escena.
+              </p>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>© <span id="year">2026</span> Luis Cortés Muñoz · Universidad Iberoamericana</span>
+      <a href="index.html">← Volver al índice</a>
+    </div>
+  </footer>
+
+  <button class="to-top" type="button" aria-label="Volver arriba">↑</button>
+
+  <script src="assets/js/main.js"></script>
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>

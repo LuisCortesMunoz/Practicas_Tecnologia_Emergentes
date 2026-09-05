@@ -9,17 +9,20 @@ Sitio estático (HTML + CSS + JS, sin dependencias externas), listo para publica
 ```
 index.html            Portada: perfil e índice de prácticas
 practica-1.html       Práctica 1 — Representaciones 3D en Unity y Blender
+practica-2.html       Práctica 2 — Animaciones en Unity
 assets/css/styles.css Estilos (paleta verde, modo claro y oscuro, responsive)
 assets/js/main.js     Menú móvil y botón "volver arriba"
-assets/videos         Videos de las representaciones en Unity y Blender
+assets/img            Fotografía de perfil
+assets/videos         Videos de las prácticas
 ```
 
 ## Agregar una nueva práctica
 
-1. Copia `practica-1.html` como `practica-2.html` y actualiza el contenido.
-2. Guarda sus imágenes en `assets/img/practica-2/`.
-3. En `index.html`, dentro de `<div class="practices">`, reemplaza la tarjeta
-   `practice--soon` correspondiente por una `practice--ready` que apunte al nuevo archivo.
+1. Copia `practica-2.html` como `practica-3.html` y actualiza el contenido.
+2. Guarda sus videos en `assets/videos/` y sus imágenes en `assets/img/`.
+3. En `index.html`, dentro de `<div class="practices">`, duplica la última tarjeta
+   `practice--ready` y apúntala al nuevo archivo; agrega también el enlace en la
+   navegación de cada página.
 
 ## Publicar
 
