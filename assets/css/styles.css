@@ -202,7 +202,29 @@ p  { margin: 0 0 1rem; }
   color: var(--text-soft);
 }
 .nav__links a:hover { background: var(--brand-soft); color: var(--brand-ink); text-decoration: none; }
-.nav__links a.is-active { background: var(--brand-soft); color: var(--brand-ink); }
+.nav__links a:focus-visible { background: var(--brand-soft); color: var(--brand-ink); }
+
+/* Estado activo: verde suave + texto verde oscuro (contraste alto) */
+.nav__links a.is-active,
+.nav__links a.is-active:hover,
+.nav__links a.is-active:focus-visible {
+  background: var(--brand-soft);
+  color: var(--brand-ink);
+  font-weight: 650;
+}
+
+/* El botón del menú es verde sólido: el texto siempre va en blanco.
+   Sin estas reglas, `.nav__links a` (0,1,1) gana sobre `.btn--primary` (0,1,0)
+   y el botón queda con el gris de los enlaces inactivos. */
+.nav__links a.btn--primary,
+.nav__links a.btn--primary:hover,
+.nav__links a.btn--primary:focus-visible,
+.nav__links a.btn--primary.is-active,
+.nav__links a.btn--primary.is-active:hover,
+.nav__links a.btn--primary.is-active:focus-visible {
+  background: linear-gradient(135deg, var(--green-600), var(--green-700));
+  color: #fff;
+}
 
 @media (max-width: 780px) {
   .nav__toggle { display: block; }
@@ -679,10 +701,70 @@ p  { margin: 0 0 1rem; }
   object-position: 62% 30%;
   background: var(--surface-soft);
   border: 1px solid var(--border);
-  width: 64px;
-  height: 64px;
-  border-radius: 20px;
+  width: 82px;
+  height: 82px;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease;
 }
+.avatar-trigger {
+  flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  line-height: 0;
+  border-radius: 24px;
+  cursor: pointer;
+}
+.avatar-trigger:hover .avatar--photo,
+.avatar-trigger:focus-visible .avatar--photo {
+  transform: scale(1.05);
+  box-shadow: var(--shadow);
+}
+
+/* ---------- Lightbox ---------- */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: none;
+  place-items: center;
+  padding: clamp(1rem, 5vw, 3rem);
+  background: rgba(4, 20, 12, .82);
+  backdrop-filter: blur(3px);
+}
+.lightbox.is-open { display: grid; }
+.lightbox:focus { outline: none; }
+
+.lightbox__img {
+  display: block;
+  max-width: min(560px, 100%);
+  max-height: 82vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+}
+
+.lightbox__close {
+  position: absolute;
+  top: clamp(.75rem, 3vw, 1.5rem);
+  right: clamp(.75rem, 3vw, 1.5rem);
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border: 1px solid rgba(255, 255, 255, .35);
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .12);
+  color: #fff;
+  font-size: 1.2rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background .15s ease, transform .15s ease;
+}
+.lightbox__close:hover { background: rgba(255, 255, 255, .26); transform: scale(1.06); }
 
 /* ---------- Tarjetas de pasos (proceso) ---------- */
 .card--step { cursor: default; }

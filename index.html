@@ -56,21 +56,18 @@
 
         <aside class="profile" id="perfil">
           <div class="profile__head">
-            <img class="avatar avatar--photo" src="assets/img/perfil.jpg" alt="Fotografía de Luis Cortés Muñoz" width="64" height="64">
+            <button class="avatar-trigger" type="button" data-lightbox="assets/img/perfil.jpg" aria-label="Ampliar la fotografía de perfil">
+              <img class="avatar avatar--photo" src="assets/img/perfil.jpg" alt="Fotografía de Luis Cortés Muñoz" width="82" height="82">
+            </button>
             <div>
               <h2>Luis Cortés Muñoz</h2>
               <span>Universidad Iberoamericana</span>
             </div>
           </div>
           <p>
-            Estudiante de Ingeniería en la Universidad Iberoamericana. En este portafolio
+            Estudiante de Ingeniería Mecatrónica y Sistemas Ciberfísicos. En este portafolio
             documento las prácticas de Tecnologías Emergentes con su desarrollo y evidencias.
           </p>
-          <div class="tag-row">
-            <span class="tag">Realidad Mixta</span>
-            <span class="tag">Unity</span>
-            <span class="tag">Blender</span>
-          </div>
         </aside>
       </div>
     </section>
@@ -121,6 +118,12 @@
   </footer>
 
   <button class="to-top" type="button" aria-label="Volver arriba">↑</button>
+
+  <!-- Lightbox de la fotografía de perfil -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Fotografía ampliada" tabindex="-1" hidden>
+    <button class="lightbox__close" type="button" aria-label="Cerrar">✕</button>
+    <img class="lightbox__img" src="" alt="Fotografía de Luis Cortés Muñoz">
+  </div>
 
   <script src="assets/js/main.js"></script>
   <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
