@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Práctica 4 · Prácticas Tecnologías Emergentes</title>
+  <meta name="description" content="Práctica 4: nave, colliders y realidad mixta — colisiones con triggers en Unity, interacción con botones en el visor y una nave vinculada a la cámara del usuario.">
+  <meta name="author" content="Luis Cortés Muñoz">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="icon" href="assets/img/perfil.jpg">
+</head>
+<body>
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html">
+        <img class="brand__mark brand__mark--photo" src="assets/img/perfil.jpg" alt="Luis Cortés Muñoz">
+        <span class="brand__text">
+          Tecnologías Emergentes
+          <small>Luis Cortés Muñoz</small>
+        </span>
+      </a>
+
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="nav-links">☰</button>
+
+      <ul class="nav__links" id="nav-links">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="practica-1.html">Práctica 1</a></li>
+        <li><a href="practica-2.html">Práctica 2</a></li>
+        <li><a class="is-active" href="practica-4.html">Práctica 4</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ ENCABEZADO ============ -->
+    <section class="page-hero">
+      <div class="container">
+        <p class="breadcrumb"><a href="index.html">Inicio</a> / <a href="index.html#practicas">Prácticas</a> / Práctica 4</p>
+        <span class="eyebrow">Práctica 4</span>
+        <h1>Nave, Colliders y Realidad Mixta</h1>
+        <p class="lead" style="color: var(--text-soft); max-width: 62ch;">
+          Tres versiones de una misma idea: una nave que, al atravesar un portal, hace
+          aparecer un planeta. La práctica evoluciona desde una prueba en Unity hasta
+          una experiencia en el visor donde el propio usuario es la nave.
+        </p>
+
+        <ol class="flow" aria-label="Evolución de la práctica">
+          <li><span>Prueba 1</span>Unity (Play)</li>
+          <li><span>Prueba 2</span>Botones en realidad mixta</li>
+          <li><span>Prueba 3</span>Movimiento físico del usuario</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ 1. OBJETIVO ============ -->
+    <section class="section" id="objetivo">
+      <div class="container">
+        <ul class="toc">
+          <li><a href="#objetivo">1. Objetivo</a></li>
+          <li><a href="#conceptos">2. Conceptos</a></li>
+          <li><a href="#desarrollo">3. Desarrollo</a></li>
+          <li><a href="#evidencias">4. Evidencias</a></li>
+          <li><a href="#resultados">5. Resultados</a></li>
+          <li><a href="#conclusion">6. Conclusión</a></li>
+        </ul>
+
+        <div class="section__head">
+          <span class="section-number">01 · Objetivo</span>
+          <h2>¿Qué se buscaba con la práctica?</h2>
+        </div>
+
+        <div class="prose">
+          <p>
+            Comprender cómo dos objetos interactúan entre sí dentro de Unity y cómo ese
+            contacto puede desencadenar otra acción. La idea general es sencilla: al
+            atravesar una zona determinada (un cilindro que funciona como portal), un
+            objeto —el planeta— aparece o desaparece.
+          </p>
+          <p>
+            Para entender mejor los conceptos, la misma idea se desarrolló en tres
+            versiones. Cada una agrega una capa nueva: primero la lógica de colisiones,
+            después la interacción con una interfaz dentro del visor y, por último, el
+            movimiento físico del usuario como forma de interacción.
+          </p>
+        </div>
+
+        <aside class="note" style="margin-top: 1.5rem;">
+          <p>
+            <strong>Material de referencia:</strong> presentación <em>Físicas S2 — Colliders
+            y colisiones</em>. Se tomó como base la práctica de detección de colisiones
+            (una nave que, al pasar por una zona, provoca la aparición de otros objetos)
+            y los tres códigos que la acompañan: <code>ActivadorBoton</code>,
+            <code>BotonPorContacto</code> y <code>MoverPulsador</code>.
+          </p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============ 2. CONCEPTOS ============ -->
+    <section class="section section--alt" id="conceptos">
+      <div class="container">
+        <div class="section__head">
+          <span class="section-number">02 · Conceptos</span>
+          <h2>Conceptos utilizados</h2>
+          <p>Solo los conceptos de la presentación y de Unity que se aplicaron directamente en la práctica.</p>
+        </div>
+
+        <div class="cards">
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Física</span>
+              <h3>Collider</h3>
+              <p>Forma invisible que define el volumen físico de un objeto. Se usa la forma más sencilla que represente el contacto; por eso el cilindro usa un <em>Box Collider</em> en lugar del <em>Capsule Collider</em> original.</p>
+            </div>
+          </article>
+
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Física</span>
+              <h3>Trigger</h3>
+              <p>Un collider que no bloquea: se puede atravesar y solo avisa cuando algo entra (<code>OnTriggerEnter</code>) o sale (<code>OnTriggerExit</code>). Es la “zona” del portal.</p>
+            </div>
+          </article>
+
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Física</span>
+              <h3>Rigidbody kinematic</h3>
+              <p>Hace que la nave participe en la física sin caer ni ser empujada. Sin al menos un Rigidbody, Unity no dispara los eventos del trigger.</p>
+            </div>
+          </article>
+
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Unity</span>
+              <h3>Activar y desactivar objetos</h3>
+              <p><code>SetActive(true/false)</code> enciende o apaga un objeto completo. Así el planeta empieza oculto y aparece cuando la nave cruza el portal.</p>
+            </div>
+          </article>
+
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Unity</span>
+              <h3>Jerarquía Parent → Child</h3>
+              <p>Un objeto hijo hereda la posición y rotación de su padre. Es la clave de la tercera prueba, donde la nave se vuelve hija de la cámara.</p>
+            </div>
+          </article>
+
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Interfaz</span>
+              <h3>Paneles y botones</h3>
+              <p>Un Canvas en modo <em>World Space</em> coloca un panel con botones como un objeto más dentro del espacio 3D, al alcance de la mano del usuario.</p>
+            </div>
+          </article>
+
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Realidad mixta</span>
+              <h3>Passthrough y seguimiento</h3>
+              <p>El visor muestra la habitación real detrás de los objetos virtuales y sigue la posición y rotación de la cabeza (6DoF), de modo que caminar mueve la cámara virtual.</p>
+            </div>
+          </article>
+
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Programación</span>
+              <h3>Scripts en C#</h3>
+              <p>Tres scripts reutilizados en las tres pruebas: uno marca a la nave, otro convierte al cilindro en trigger y controla el planeta, y otro mueve la nave.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 3. DESARROLLO ============ -->
+    <section class="section" id="desarrollo">
+      <div class="container">
+        <div class="section__head">
+          <span class="section-number">03 · Desarrollo</span>
+          <h2>Desarrollo de las tres pruebas</h2>
+          <p>Cada prueba parte de la anterior y reutiliza la misma lógica de colisiones; lo que cambia es la forma en que el usuario mueve la nave.</p>
+        </div>
+
+        <div class="stages">
+
+          <!-- Prueba 1 -->
+          <article class="stage" id="prueba-1">
+            <header class="stage__head">
+              <span class="practice__num">1</span>
+              <div>
+                <span class="card__kicker">Prueba 01 · Unity</span>
+                <h3>Funcionamiento en Unity</h3>
+              </div>
+            </header>
+
+            <h4>Qué se programó</h4>
+            <p>
+              En la escena se colocaron tres objetos principales: la nave, un cilindro que
+              funciona como portal y una esfera que representa el planeta. Se usaron tres
+              scripts basados en la presentación:
+            </p>
+            <ul class="specs">
+              <li><strong>ActivadorBoton</strong> (en la nave): un componente “etiqueta” que le indica al cilindro qué objeto tiene permiso de activarlo.</li>
+              <li><strong>BotonPorContacto</strong> (en el cilindro): convierte su collider en trigger, oculta el planeta al iniciar y lo activa cuando entra la nave.</li>
+              <li><strong>MoverPulsador</strong> (en la nave): la vuelve kinematic y sin gravedad, y la mueve con el teclado (flechas y W/S para avanzar o retroceder).</li>
+            </ul>
+
+            <h4>Qué ocurre durante la prueba</h4>
+            <p>
+              Al dar <em>Play</em> el planeta está oculto. Con el teclado se dirige la nave
+              hacia el cilindro y, en el momento en que lo atraviesa, el planeta aparece y en
+              la consola se muestra el mensaje “¡Botón presionado!”.
+            </p>
+
+            <h4>Concepto de colisiones utilizado</h4>
+            <p>
+              Se trata de una detección por <strong>trigger</strong>, no de un choque: la nave
+              no se detiene al tocar el cilindro, simplemente lo cruza y Unity avisa del
+              contacto. Para que el evento se dispare se deben cumplir tres condiciones: que
+              uno de los colliders sea trigger, que ambos objetos tengan collider y que al
+              menos uno tenga Rigidbody. Además, la nave se mueve con
+              <code>MovePosition</code> para que el motor de física “sepa” que se desplazó.
+            </p>
+
+            <h4>Qué aprendí</h4>
+            <p>
+              Que una colisión no siempre significa un choque: un trigger es una forma de
+              detectar presencia y usarla como interruptor. También que el modelo de la nave
+              tiene varios colliders, por lo que el script lleva la cuenta de ellos para que
+              el planeta no parpadee con cada pieza que entra.
+            </p>
+          </article>
+
+          <!-- Prueba 2 -->
+          <article class="stage" id="prueba-2">
+            <header class="stage__head">
+              <span class="practice__num">2</span>
+              <div>
+                <span class="card__kicker">Prueba 02 · Visor de realidad mixta</span>
+                <h3>Interacción en realidad mixta</h3>
+              </div>
+            </header>
+
+            <h4>Cómo se incorporó la interacción con botones</h4>
+            <p>
+              La escena se llevó a los lentes Meta Quest con <em>passthrough</em>, de modo que
+              la nave, el portal y el planeta aparecen sobre la habitación real. Frente al
+              usuario flota un panel con seis botones (Arriba, Abajo, Izquierda, Derecha,
+              Avanzar y Retroceder) que se pueden presionar con el dedo o con el rayo del
+              control. Se agregó el script <strong>BotonMantenido</strong> para que la nave se
+              mueva de forma continua <em>mientras</em> el botón está presionado, y no solo un
+              paso por clic.
+            </p>
+
+            <h4>Cómo cambia la experiencia frente a Unity</h4>
+            <p>
+              En el editor el usuario observa la escena en una pantalla y usa el teclado; en
+              el visor está dentro de ella. Esto obligó a pensar en tamaños reales (el panel
+              mide 0.5 m de ancho para alcanzarse con la mano) y en cómo llega un “clic” sin
+              mouse: el sistema de interacción detecta el dedo o el rayo sobre una superficie
+              invisible del panel y lo convierte en un evento de botón. Al principio los
+              botones se veían en un lugar pero la superficie táctil estaba en otro, así que
+              no respondían; se corrigió alineando el panel con esa superficie.
+            </p>
+
+            <h4>Cómo se controla la aparición y desaparición del planeta</h4>
+            <p>
+              Con los botones el usuario conduce la nave hacia el portal. Cuando la nave entra
+              al cilindro, <code>OnTriggerEnter</code> activa el planeta; cuando sale el último
+              collider de la nave, <code>OnTriggerExit</code> lo desactiva. Así, los botones
+              controlan indirectamente al planeta: basta con meter o sacar la nave del portal
+              para que aparezca o desaparezca.
+            </p>
+
+            <h4>Conceptos de realidad mixta aplicados</h4>
+            <ul class="specs">
+              <li><strong>Passthrough:</strong> lo virtual convive con el entorno real.</li>
+              <li><strong>Interfaz en World Space:</strong> el panel es un objeto 3D dentro del espacio.</li>
+              <li><strong>Interacción por toque y por rayo:</strong> el dedo o el control actúan como “puntero”.</li>
+              <li><strong>Escala real:</strong> en el visor las medidas de Unity equivalen a metros.</li>
+            </ul>
+          </article>
+
+          <!-- Prueba 3 -->
+          <article class="stage" id="prueba-3">
+            <header class="stage__head">
+              <span class="practice__num">3</span>
+              <div>
+                <span class="card__kicker">Prueba 03 · Movimiento físico</span>
+                <h3>Nave vinculada a la cámara</h3>
+              </div>
+            </header>
+
+            <h4>Qué significa hacer a la nave hija de la cámara</h4>
+            <p>
+              En la jerarquía de Unity se arrastró la nave dentro del objeto que representa la
+              cabeza del usuario (<code>CenterEyeAnchor</code>, la cámara del visor). Se colocó
+              unos 30 cm por debajo de los ojos, de forma que el usuario queda “dentro de la
+              cabina”. El objetivo es que el usuario <em>sea</em> la nave.
+            </p>
+
+            <pre class="tree" aria-label="Jerarquía de la escena"><code>[BuildingBlock] Camera Rig        ← el usuario
+└─ TrackingSpace
+   └─ CenterEyeAnchor             ← cámara (Parent)
+      └─ StarSparrow16  (nave)    ← Child
+Cylinder  (portal, trigger)
+Sphere    (planeta, oculto al iniciar)</code></pre>
+
+            <h4>Cómo funciona la relación Parent → Child</h4>
+            <p>
+              Un objeto hijo no tiene una posición “propia” en el mundo: su posición y rotación
+              son relativas a las de su padre. Si el padre se mueve o gira, el hijo lo
+              acompaña manteniendo la misma distancia y orientación respecto a él.
+            </p>
+
+            <h4>Por qué la nave se mueve con el usuario</h4>
+            <p>
+              El visor actualiza en cada cuadro la posición y rotación de la cámara según el
+              movimiento real de la cabeza. Como la nave es hija de esa cámara, cuando camino o
+              giro físicamente, la nave se desplaza conmigo. Esto se logró sin escribir código
+              nuevo, solo reorganizando la jerarquía. Fue importante elegir la cámara como
+              padre y no el <em>Camera Rig</em>, porque el rig no se mueve al caminar.
+            </p>
+
+            <h4>Cómo se detecta que la nave atraviesa el cilindro</h4>
+            <p>
+              El cilindro se colocó a la altura de la cabeza, a unos 1.6 m del punto de inicio,
+              y se agrandó a 3 m de diámetro para poder cruzarlo caminando. Conserva su
+              collider como trigger y la nave mantiene su Rigidbody kinematic y sus colliders,
+              así que se siguen cumpliendo las tres condiciones de la primera prueba.
+            </p>
+
+            <h4>Cómo la colisión provoca la aparición del planeta</h4>
+            <p>
+              Al cruzar el portal, el primer collider de la nave que entra dispara
+              <code>OnTriggerEnter</code>; el script comprueba que se trata de la nave y
+              activa el planeta con <code>SetActive(true)</code>. Al terminar de cruzar,
+              <code>OnTriggerExit</code> lo vuelve a ocultar, y el ciclo se puede repetir
+              cuantas veces se quiera.
+            </p>
+
+            <h4>Diferencia respecto a las pruebas anteriores</h4>
+            <p>
+              En las dos primeras pruebas la nave era un objeto externo que se controlaba con
+              teclado o botones. Aquí desaparece la interfaz (el panel se desactivó) y el
+              control pasa a ser el propio cuerpo: la interacción ya no es indirecta, sino
+              física. También se desactivó el <em>Locomotor</em> del sistema de interacción,
+              porque su cápsula física chocaba con los colliders de la nave y desplazaba todo
+              el rig de forma descontrolada.
+            </p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 4. EVIDENCIAS ============ -->
+    <section class="section section--alt" id="evidencias">
+      <div class="container">
+        <div class="section__head">
+          <span class="section-number">04 · Evidencias</span>
+          <h2>Evidencias</h2>
+          <p>Video de la primera prueba y capturas del proyecto en Unity para las versiones de realidad mixta. Haz clic en una captura para ampliarla.</p>
+        </div>
+
+        <div class="video-grid video-grid--single">
+          <figure class="video-card">
+            <video controls preload="metadata" playsinline>
+              <source src="assets/videos/nave-unity.mp4" type="video/mp4">
+              Tu navegador no admite la reproducción de video.
+              <a href="assets/videos/nave-unity.mp4">Descargar el video</a>.
+            </video>
+            <figcaption>
+              <span class="card__kicker">Prueba 01 · Unity</span>
+              <h3>La nave atraviesa el cilindro</h3>
+              <p>Ejecución con Play: la nave se mueve con el teclado y, al cruzar el portal, el planeta aparece.</p>
+            </figcaption>
+          </figure>
+        </div>
+
+        <div class="video-grid" style="margin-top: 1.25rem;">
+          <figure class="video-card">
+            <button class="shot" type="button" data-lightbox="assets/img/nave-botones-rm.png" aria-label="Ampliar captura de la prueba 2">
+              <img src="assets/img/nave-botones-rm.png" alt="Unity con la escena NaveRM: panel de seis botones flotando, la nave, el portal y el planeta visible" loading="lazy">
+            </button>
+            <figcaption>
+              <span class="card__kicker">Prueba 02 · Realidad mixta</span>
+              <h3>Panel de botones y planeta</h3>
+              <p>Escena para Meta Quest con el panel de seis botones frente al usuario, la nave y el planeta activado tras cruzar el portal.</p>
+            </figcaption>
+          </figure>
+
+          <figure class="video-card">
+            <button class="shot" type="button" data-lightbox="assets/img/nave-camara-rm.png" aria-label="Ampliar captura de la prueba 3">
+              <img src="assets/img/nave-camara-rm.png" alt="Unity con la vista desde la cabina de la nave atravesando el portal frente al planeta Tierra" loading="lazy">
+            </button>
+            <figcaption>
+              <span class="card__kicker">Prueba 03 · Nave en la cámara</span>
+              <h3>Vista desde la cabina</h3>
+              <p>La nave, hija de la cámara, se ve desde la posición del usuario; al cruzar el portal aparece la Tierra. El panel de botones (Canvas) ya está desactivado.</p>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 5. RESULTADOS ============ -->
+    <section class="section" id="resultados">
+      <div class="container">
+        <div class="section__head">
+          <span class="section-number">05 · Resultados</span>
+          <h2>Resultados</h2>
+        </div>
+
+        <ul class="checklist">
+          <li>En Unity, el planeta aparece al cruzar el portal</li>
+          <li>La app se instala y corre en el Meta Quest</li>
+          <li>Los botones responden al dedo y al rayo</li>
+          <li>La nave se mueve mientras se mantiene un botón</li>
+          <li>Al caminar, la nave se mueve con el usuario</li>
+          <li>El planeta aparece al entrar y desaparece al salir</li>
+          <li>El portal puede cruzarse varias veces</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ 6. CONCLUSIÓN ============ -->
+    <section class="section section--alt" id="conclusion">
+      <div class="container">
+        <div class="section__head">
+          <span class="section-number">06 · Conclusión</span>
+          <h2>Aprendizajes y conclusión personal</h2>
+        </div>
+
+        <div class="prose">
+          <p>
+            Esta práctica me permitió comprender mejor cómo se relacionan las
+            <strong>jerarquías</strong>, los <strong>colliders</strong>, los
+            <strong>scripts</strong>, las <strong>interfaces</strong> y la
+            <strong>interacción física</strong> en realidad mixta. Trabajar la misma idea
+            tres veces hizo evidente que la lógica de colisiones se mantiene igual en todas
+            las versiones; lo que cambia es la manera en que el usuario se relaciona con la
+            escena.
+          </p>
+          <p>
+            En Unity aprendí que un trigger funciona como un interruptor invisible y que
+            necesita un Rigidbody para funcionar. En el visor entendí que una interfaz debe
+            diseñarse a escala real y que un botón no recibe clics directamente, sino a
+            través del sistema de interacción. Finalmente, al hacer a la nave hija de la
+            cámara, comprobé que una buena organización de la jerarquía puede reemplazar
+            código: el movimiento del cuerpo se convirtió en la forma principal de
+            interacción.
+          </p>
+          <p>
+            La evolución de <em>Unity → botones en realidad mixta → movimiento físico</em>
+            muestra cómo una misma mecánica puede volverse cada vez más inmersiva, y cómo
+            en la realidad mixta el usuario deja de controlar los objetos desde fuera para
+            pasar a formar parte de la experiencia.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>© <span id="year">2026</span> Luis Cortés Muñoz · Universidad Iberoamericana</span>
+      <a href="index.html">← Volver al índice</a>
+    </div>
+  </footer>
+
+  <button class="to-top" type="button" aria-label="Volver arriba">↑</button>
+
+  <!-- Lightbox de las capturas de evidencia -->
+  <div class="lightbox lightbox--wide" id="lightbox" role="dialog" aria-modal="true" aria-label="Captura ampliada" tabindex="-1" hidden>
+    <button class="lightbox__close" type="button" aria-label="Cerrar">✕</button>
+    <img class="lightbox__img" src="" alt="">
+  </div>
+
+  <script src="assets/js/main.js"></script>
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>

@@ -774,3 +774,98 @@ p  { margin: 0 0 1rem; }
 
 /* Rejilla de video con una sola pieza de evidencia */
 .video-grid--single { max-width: 840px; margin-inline: auto; }
+
+/* ---------- Práctica 4: evolución, pruebas y capturas ---------- */
+code {
+  font-family: "Cascadia Code", Consolas, "SFMono-Regular", Menlo, monospace;
+  font-size: .86em;
+  padding: .08em .35em;
+  border-radius: 6px;
+  background: var(--brand-soft);
+  color: var(--brand-ink);
+}
+
+.prose { max-width: 72ch; }
+.prose p { color: var(--text-soft); }
+
+.flow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .6rem;
+  list-style: none;
+  margin: 1.75rem 0 0;
+  padding: 0;
+}
+.flow li {
+  display: flex;
+  flex-direction: column;
+  padding: .7rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  font-weight: 700;
+}
+.flow li span {
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--brand);
+}
+.flow li + li { position: relative; }
+@media (min-width: 640px) {
+  .flow { gap: 2rem; }
+  .flow li + li::before {
+    content: "→";
+    position: absolute;
+    left: -1.45rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--brand);
+    font-weight: 800;
+  }
+}
+
+.stages { display: grid; gap: 1.25rem; }
+.stage {
+  padding: clamp(1.25rem, 3vw, 2rem);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--brand);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+.stage__head { display: flex; align-items: center; gap: 1rem; margin-bottom: .75rem; }
+.stage__head .card__kicker { margin-bottom: .1rem; }
+.stage__head h3 { margin: 0; }
+.stage h4 { font-size: 1rem; margin: 1.35rem 0 .4rem; }
+.stage p { margin: 0 0 .5rem; color: var(--text-soft); max-width: 78ch; }
+.stage .specs { max-width: 78ch; }
+
+.tree {
+  margin: 1rem 0 .25rem;
+  padding: 1rem 1.2rem;
+  overflow-x: auto;
+  background: var(--surface-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: .88rem;
+  line-height: 1.6;
+}
+.tree code { padding: 0; background: none; color: var(--text); font-size: inherit; }
+
+.shot {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  background: #06180f;
+  line-height: 0;
+  cursor: zoom-in;
+}
+.shot img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; object-position: top; }
+.shot:hover img, .shot:focus-visible img { opacity: .9; }
+
+.lightbox--wide .lightbox__img { max-width: min(1400px, 100%); }
