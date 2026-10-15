@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Práctica 3 · Prácticas Tecnologías Emergentes</title>
+  <meta name="description" content="Práctica 3: rampa, colliders y colisiones — tipos de collider, construcción de una pista con rampa, Physic Material (rebote y fricción) y detección Discrete frente a Continuous en Unity.">
+  <meta name="author" content="Luis Cortés Muñoz">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="icon" href="assets/img/perfil.jpg">
+</head>
+<body>
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html">
+        <img class="brand__mark brand__mark--photo" src="assets/img/perfil.jpg" alt="Luis Cortés Muñoz">
+        <span class="brand__text">
+          Tecnologías Emergentes
+          <small>Luis Cortés Muñoz</small>
+        </span>
+      </a>
+
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="nav-links">☰</button>
+
+      <ul class="nav__links" id="nav-links">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="practica-1.html">Práctica 1</a></li>
+        <li><a href="practica-2.html">Práctica 2</a></li>
+        <li><a class="is-active" href="practica-3.html">Práctica 3</a></li>
+        <li><a href="practica-4.html">Práctica 4</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ ENCABEZADO ============ -->
+    <section class="page-hero">
+      <div class="container">
+        <p class="breadcrumb"><a href="index.html">Inicio</a> / <a href="index.html#practicas">Prácticas</a> / Práctica 3</p>
+        <span class="eyebrow">Práctica 3</span>
+        <h1>Rampa, Colliders y Colisiones</h1>
+        <p class="lead" style="color: var(--text-soft); max-width: 62ch;">
+          Una pista con rampa, paredes y obstáculos por la que baja una pelota. Con ella
+          se probaron los colliders, el Rigidbody, los materiales físicos (rebote y
+          fricción) y los modos de detección de colisiones de Unity.
+        </p>
+
+        <ol class="flow" aria-label="Recorrido de la práctica">
+          <li><span>Paso 1</span>Gravedad y colliders</li>
+          <li><span>Paso 2</span>Construcción de la pista</li>
+          <li><span>Paso 3</span>Rebote y fricción</li>
+          <li><span>Paso 4</span>Discrete vs Continuous</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ 1. OBJETIVO ============ -->
+    <section class="section" id="objetivo">
+      <div class="container">
+        <ul class="toc">
+          <li><a href="#objetivo">1. Objetivo</a></li>
+          <li><a href="#conceptos">2. Conceptos</a></li>
+          <li><a href="#desarrollo">3. Desarrollo</a></li>
+          <li><a href="#evidencias">4. Evidencias</a></li>
+          <li><a href="#resultados">5. Resultados</a></li>
+          <li><a href="#conclusion">6. Conclusión</a></li>
+        </ul>
+
+        <div class="section__head">
+          <span class="section-number">01 · Objetivo</span>
+          <h2>¿Qué se buscaba con la práctica?</h2>
+        </div>
+
+        <div class="prose">
+          <p>
+            Configurar superficies físicas y detectar contactos entre objetos. Para ello se
+            construyó una pista inclinada con paredes laterales y obstáculos, y se dejó caer
+            una pelota con <em>Sphere Collider</em> y <em>Rigidbody</em> para observar cómo
+            reacciona al chocar con cada superficie.
+          </p>
+          <p>
+            Sobre la misma escena se fueron cambiando parámetros —el material físico de la
+            pelota y el modo de detección de colisiones— para comparar su comportamiento y
+            entender qué controla cada uno.
+          </p>
+        </div>
+
+        <aside class="note" style="margin-top: 1.5rem;">
+          <p>
+            <strong>Material de referencia:</strong> presentación <em>Físicas S2 — Colliders
+            y colisiones</em>, primera parte: tipos de collider, construcción de la pista y
+            detección de colisiones rápidas (Discrete y Continuous).
+          </p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============ 2. CONCEPTOS ============ -->
+    <section class="section section--alt" id="conceptos">
+      <div class="container">
+        <div class="section__head">
+          <span class="section-number">02 · Conceptos</span>
+          <h2>Conceptos utilizados</h2>
+          <p>Regla práctica de la presentación: usar la forma de collider más sencilla que represente el contacto.</p>
+        </div>
+
+        <div class="cards">
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Collider</span>
+              <h3>Box Collider</h3>
+              <p>Adecuado para cajas, paredes y plataformas. Es el que usan el piso, la rampa, las paredes laterales y los obstáculos de la pista.</p>
+            </div>
+          </article>
+
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Collider</span>
+              <h3>Sphere Collider</h3>
+              <p>Adecuado para pelotas y objetos redondos. La pelota usa un Sphere Collider de radio 0.5, que coincide exactamente con su malla.</p>
+            </div>
+          </article>
+
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Collider</span>
+              <h3>Capsule y Mesh Collider</h3>
+              <p>El Capsule es útil para personajes y objetos alargados; el Mesh representa geometrías irregulares, pero requiere mayor procesamiento.</p>
+            </div>
+          </article>
+
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Física</span>
+              <h3>Rigidbody</h3>
+              <p>Hace que el objeto responda a la gravedad y a las fuerzas. La pelota tiene masa 10, gravedad activada y no es kinematic, así que rueda por la rampa por sí sola.</p>
+            </div>
+          </article>
+
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Física</span>
+              <h3>Physic Material</h3>
+              <p>Define cómo se comporta una superficie al contacto: fricción dinámica y estática, rebote (<em>Bounciness</em>) y cómo se combinan los valores de los dos objetos.</p>
+            </div>
+          </article>
+
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Física</span>
+              <h3>Friction / Bounce Combine</h3>
+              <p>Cuando dos materiales se tocan, Unity mezcla sus valores con <em>Average</em>, <em>Minimum</em>, <em>Multiply</em> o <em>Maximum</em>. Con Maximum gana el valor más alto de los dos.</p>
+            </div>
+          </article>
+
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Detección</span>
+              <h3>Discrete</h3>
+              <p>Revisa colisiones solo en cada paso de la física. Es adecuada para la mayoría de los objetos y consume menos recursos.</p>
+            </div>
+          </article>
+
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Detección</span>
+              <h3>Continuous</h3>
+              <p>Revisa también la trayectoria entre pasos, lo que reduce el riesgo de que un objeto rápido atraviese una superficie delgada.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 3. DESARROLLO ============ -->
+    <section class="section" id="desarrollo">
+      <div class="container">
+        <div class="section__head">
+          <span class="section-number">03 · Desarrollo</span>
+          <h2>Desarrollo de la práctica</h2>
+          <p>Primero se probó la gravedad con cubos, después se armó la pista y sobre ella se hicieron los experimentos de material y de detección.</p>
+        </div>
+
+        <div class="stages">
+
+          <!-- Paso 1 -->
+          <article class="stage" id="paso-1">
+            <header class="stage__head">
+              <span class="practice__num">1</span>
+              <div>
+                <span class="card__kicker">Paso 01 · Primeras pruebas</span>
+                <h3>Gravedad y colliders con cubos</h3>
+              </div>
+            </header>
+
+            <p>
+              Antes de construir la pista se colocaron tres cubos con <em>Box Collider</em> y
+              <em>Rigidbody</em> sobre una plataforma. Al dar <em>Play</em> caen por la
+              gravedad y se detienen al tocar la superficie, porque ambos objetos tienen
+              collider. Después se inclinó la plataforma para ver cómo los cubos se deslizan
+              por la pendiente, y se probó un cubo con la base más pesada para observar cómo
+              la distribución de la masa cambia la forma en que cae y se acomoda.
+            </p>
+          </article>
+
+          <!-- Paso 2 -->
+          <article class="stage" id="paso-2">
+            <header class="stage__head">
+              <span class="practice__num">2</span>
+              <div>
+                <span class="card__kicker">Paso 02 · Escena</span>
+                <h3>Construcción de la pista</h3>
+              </div>
+            </header>
+
+            <p>Se siguieron los pasos de la presentación:</p>
+            <ul class="specs">
+              <li>Crear un <strong>piso</strong>.</li>
+              <li>Añadir una <strong>rampa inclinada</strong>.</li>
+              <li>Construir dos <strong>paredes laterales</strong> para que la pelota no se salga.</li>
+              <li>Añadir <strong>tres obstáculos</strong> a lo largo del recorrido.</li>
+              <li>Colocar una <strong>pelota</strong> con Sphere Collider y Rigidbody en la parte alta.</li>
+            </ul>
+
+            <h4>Qué ocurre durante la prueba</h4>
+            <p>
+              Al iniciar, la pelota cae sobre la rampa, rueda hacia abajo, choca con los
+              obstáculos y rebota contra las paredes laterales hasta llegar al piso. Todas las
+              piezas de la pista usan Box Collider, que es la forma más sencilla para
+              superficies planas.
+            </p>
+
+            <h4>Prueba: desactivar el collider del piso</h4>
+            <p>
+              La presentación propone desactivar temporalmente el collider del piso. Sin
+              collider, el piso se sigue viendo, pero deja de existir para la física: la pelota
+              lo atraviesa y sigue cayendo. Esto muestra que lo que detiene a un objeto no es
+              la malla visible, sino su collider.
+            </p>
+          </article>
+
+          <!-- Paso 3 -->
+          <article class="stage" id="paso-3">
+            <header class="stage__head">
+              <span class="practice__num">3</span>
+              <div>
+                <span class="card__kicker">Paso 03 · Physic Material</span>
+                <h3>Rebote y fricción de la pelota</h3>
+              </div>
+            </header>
+
+            <p>
+              Se creó un <em>Physic Material</em> llamado <strong>Pelota</strong> y se asignó a
+              su collider. Se hicieron tres variantes, cambiando un parámetro a la vez:
+            </p>
+            <ul class="specs">
+              <li><strong>Rebote con Average:</strong> fricción 50, <em>Bounciness</em> 1 y <em>Bounce Combine</em> en Average. El rebote se promedia con el de la pista (que no tiene material), así que la pelota rebota menos de lo esperado.</li>
+              <li><strong>Rebote con Maximum:</strong> los mismos valores, pero con <em>Bounce Combine</em> en Maximum. Ahora gana el rebote de la pelota y rebota con mucha más fuerza en cada contacto.</li>
+              <li><strong>Fricción 10:</strong> fricción dinámica y estática en 10 y ambos <em>Combine</em> en Maximum. Con menos fricción la pelota se desliza y avanza con más facilidad por la rampa.</li>
+            </ul>
+
+            <h4>Qué aprendí</h4>
+            <p>
+              Que el comportamiento de un contacto depende de los <em>dos</em> materiales que se
+              tocan, no solo de uno. El mismo valor de rebote produce resultados muy distintos
+              según el modo de combinación elegido.
+            </p>
+          </article>
+
+          <!-- Paso 4 -->
+          <article class="stage" id="paso-4">
+            <header class="stage__head">
+              <span class="practice__num">4</span>
+              <div>
+                <span class="card__kicker">Paso 04 · Colisiones rápidas</span>
+                <h3>Discrete frente a Continuous</h3>
+              </div>
+            </header>
+
+            <p>
+              Para el experimento se aumentó la velocidad de la pelota y se comparó el modo
+              <em>Collision Detection</em> del Rigidbody. Con <strong>Discrete</strong>, Unity
+              solo revisa la posición en cada paso de la física; si la pelota avanza más que el
+              grosor de una pared entre un paso y otro, puede atravesarla sin registrar el
+              choque. Con <strong>Continuous</strong>, la trayectoria se revisa también entre
+              pasos y la pelota choca correctamente con las paredes.
+            </p>
+            <p>
+              Unity ofrece además <em>Continuous Dynamic</em> y <em>Continuous Speculative</em>
+              para casos en los que varios objetos rápidos chocan entre sí. La conclusión es usar
+              Discrete por defecto y Continuous solo en los objetos rápidos, porque consume más
+              recursos.
+            </p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 4. EVIDENCIAS ============ -->
+    <section class="section section--alt" id="evidencias">
+      <div class="container">
+        <div class="section__head">
+          <span class="section-number">04 · Evidencias</span>
+          <h2>Evidencias</h2>
+          <p>Videos grabados en Unity durante cada prueba.</p>
+        </div>
+
+        <h3 style="margin-bottom: 1rem;">Gravedad y colliders con cubos</h3>
+        <div class="video-grid">
+          <figure class="video-card">
+            <video controls preload="metadata" playsinline>
+              <source src="assets/videos/rampa-cubos.mp4" type="video/mp4">
+              Tu navegador no admite la reproducción de video.
+              <a href="assets/videos/rampa-cubos.mp4">Descargar el video</a>.
+            </video>
+            <figcaption>
+              <span class="card__kicker">Paso 01 · Gravedad</span>
+              <h3>Caída de los cubos</h3>
+              <p>Tres cubos con Rigidbody caen por la gravedad al dar Play.</p>
+            </figcaption>
+          </figure>
+
+          <figure class="video-card">
+            <video controls preload="metadata" playsinline>
+              <source src="assets/videos/rampa-cubos-2.mp4" type="video/mp4">
+              Tu navegador no admite la reproducción de video.
+              <a href="assets/videos/rampa-cubos-2.mp4">Descargar el video</a>.
+            </video>
+            <figcaption>
+              <span class="card__kicker">Paso 01 · Plano inclinado</span>
+              <h3>Cubos sobre la plataforma inclinada</h3>
+              <p>Los cubos caen sobre la plataforma y se deslizan al inclinarla.</p>
+            </figcaption>
+          </figure>
+
+          <figure class="video-card">
+            <video controls preload="metadata" playsinline>
+              <source src="assets/videos/rampa-cubo-base-pesada.mp4" type="video/mp4">
+              Tu navegador no admite la reproducción de video.
+              <a href="assets/videos/rampa-cubo-base-pesada.mp4">Descargar el video</a>.
+            </video>
+            <figcaption>
+              <span class="card__kicker">Paso 01 · Masa</span>
+              <h3>Cubo con la base más pesada</h3>
+              <p>Prueba de cómo la distribución de la masa cambia la forma en que el cubo cae y se acomoda.</p>
+            </figcaption>
+          </figure>
+        </div>
+
+        <h3 style="margin: 2rem 0 1rem;">Pista con rampa</h3>
+        <div class="video-grid video-grid--single">
+          <figure class="video-card">
+            <video controls preload="metadata" playsinline>
+              <source src="assets/videos/rampa-pista.mp4" type="video/mp4">
+              Tu navegador no admite la reproducción de video.
+              <a href="assets/videos/rampa-pista.mp4">Descargar el video</a>.
+            </video>
+            <figcaption>
+              <span class="card__kicker">Paso 02 · Pista</span>
+              <h3>La pelota recorre la pista</h3>
+              <p>Piso, rampa, paredes laterales y tres obstáculos; la pelota con Sphere Collider y Rigidbody baja por la rampa.</p>
+            </figcaption>
+          </figure>
+        </div>
+
+        <h3 style="margin: 2rem 0 1rem;">Rebote y fricción</h3>
+        <div class="video-grid">
+          <figure class="video-card">
+            <video controls preload="metadata" playsinline>
+              <source src="assets/videos/rampa-rebote-average.mp4" type="video/mp4">
+              Tu navegador no admite la reproducción de video.
+              <a href="assets/videos/rampa-rebote-average.mp4">Descargar el video</a>.
+            </video>
+            <figcaption>
+              <span class="card__kicker">Paso 03 · Bounce Combine: Average</span>
+              <h3>Rebote promediado</h3>
+              <p>Bounciness 1 y fricción 50; al promediarse con la pista, el rebote es moderado.</p>
+            </figcaption>
+          </figure>
+
+          <figure class="video-card">
+            <video controls preload="metadata" playsinline>
+              <source src="assets/videos/rampa-rebote-maximum.mp4" type="video/mp4">
+              Tu navegador no admite la reproducción de video.
+              <a href="assets/videos/rampa-rebote-maximum.mp4">Descargar el video</a>.
+            </video>
+            <figcaption>
+              <span class="card__kicker">Paso 03 · Bounce Combine: Maximum</span>
+              <h3>Rebote máximo</h3>
+              <p>Mismos valores con Bounce Combine en Maximum: la pelota rebota con mucha más fuerza.</p>
+            </figcaption>
+          </figure>
+
+          <figure class="video-card">
+            <video controls preload="metadata" playsinline>
+              <source src="assets/videos/rampa-friccion-10.mp4" type="video/mp4">
+              Tu navegador no admite la reproducción de video.
+              <a href="assets/videos/rampa-friccion-10.mp4">Descargar el video</a>.
+            </video>
+            <figcaption>
+              <span class="card__kicker">Paso 03 · Fricción</span>
+              <h3>Fricción 10</h3>
+              <p>Fricción dinámica y estática en 10 con Combine en Maximum: la pelota se desliza con más facilidad.</p>
+            </figcaption>
+          </figure>
+        </div>
+
+        <h3 style="margin: 2rem 0 1rem;">Detección de colisiones</h3>
+        <div class="video-grid video-grid--single">
+          <figure class="video-card">
+            <video controls preload="metadata" playsinline>
+              <source src="assets/videos/rampa-velocidad-continuous.mp4" type="video/mp4">
+              Tu navegador no admite la reproducción de video.
+              <a href="assets/videos/rampa-velocidad-continuous.mp4">Descargar el video</a>.
+            </video>
+            <figcaption>
+              <span class="card__kicker">Paso 04 · Discrete vs Continuous</span>
+              <h3>Pelota rápida con detección Continuous</h3>
+              <p>Se aumenta la velocidad de la pelota y se cambia Collision Detection en el Rigidbody (masa 10) para comparar los modos.</p>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 5. RESULTADOS ============ -->
+    <section class="section" id="resultados">
+      <div class="container">
+        <div class="section__head">
+          <span class="section-number">05 · Resultados</span>
+          <h2>Resultados</h2>
+        </div>
+
+        <ul class="checklist">
+          <li>Los cubos caen y se detienen sobre la plataforma</li>
+          <li>La pista tiene piso, rampa, paredes y tres obstáculos</li>
+          <li>La pelota baja por la rampa y choca con los obstáculos</li>
+          <li>Sin collider en el piso, la pelota lo atraviesa</li>
+          <li>Bounce Combine cambia la fuerza del rebote</li>
+          <li>Menos fricción hace que la pelota se deslice más</li>
+          <li>Continuous evita que la pelota rápida atraviese las paredes</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ 6. CONCLUSIÓN ============ -->
+    <section class="section section--alt" id="conclusion">
+      <div class="container">
+        <div class="section__head">
+          <span class="section-number">06 · Conclusión</span>
+          <h2>Aprendizajes y conclusión personal</h2>
+        </div>
+
+        <div class="prose">
+          <p>
+            Esta práctica me ayudó a separar dos ideas que en Unity van juntas: lo que se
+            <em>ve</em> y lo que <em>choca</em>. La malla da la apariencia, pero es el
+            <strong>collider</strong> el que define el contacto; por eso conviene elegir la
+            forma más sencilla que represente bien al objeto.
+          </p>
+          <p>
+            Con el <strong>Physic Material</strong> entendí que el rebote y la fricción
+            dependen de los dos objetos que se tocan y de cómo se combinan sus valores. Y con
+            el experimento de velocidad comprobé que la <strong>detección de colisiones</strong>
+            también importa: un objeto rápido puede atravesar una pared con Discrete, mientras
+            que Continuous lo evita a cambio de más procesamiento.
+          </p>
+          <p>
+            Estos conceptos fueron la base de la Práctica 4, donde los colliders dejan de
+            usarse solo para chocar y se convierten en triggers que activan acciones.
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>© <span id="year">2026</span> Luis Cortés Muñoz · Universidad Iberoamericana</span>
+      <a href="index.html">← Volver al índice</a>
+    </div>
+  </footer>
+
+  <button class="to-top" type="button" aria-label="Volver arriba">↑</button>
+
+  <script src="assets/js/main.js"></script>
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>

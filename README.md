@@ -10,6 +10,7 @@ Sitio estático (HTML + CSS + JS, sin dependencias externas), listo para publica
 index.html            Portada: perfil e índice de prácticas
 practica-1.html       Práctica 1 — Representaciones 3D en Unity y Blender
 practica-2.html       Práctica 2 — Animaciones en Unity
+practica-3.html       Práctica 3 — Rampa, Colliders y Colisiones
 practica-4.html       Práctica 4 — Nave, Colliders y Realidad Mixta
 assets/css/styles.css Estilos (paleta verde, modo claro y oscuro, responsive)
 assets/js/main.js     Menú móvil y botón "volver arriba"
