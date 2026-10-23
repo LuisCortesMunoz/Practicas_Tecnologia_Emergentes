@@ -66,9 +66,10 @@
           <li><a href="#objetivo">1. Objetivo</a></li>
           <li><a href="#conceptos">2. Conceptos</a></li>
           <li><a href="#desarrollo">3. Desarrollo</a></li>
-          <li><a href="#pruebas">4. Cómo probarlo</a></li>
-          <li><a href="#resultados">5. Resultados</a></li>
-          <li><a href="#conclusion">6. Conclusión</a></li>
+          <li><a href="#evidencias">4. Evidencias</a></li>
+          <li><a href="#pruebas">5. Cómo probarlo</a></li>
+          <li><a href="#resultados">6. Resultados</a></li>
+          <li><a href="#conclusion">7. Conclusión</a></li>
         </ul>
 
         <div class="section__head">
@@ -446,11 +447,35 @@ textoRecibido.text = "Tocaste: el Cubo"   → se ve flotando en el Quest</code><
       </div>
     </section>
 
-    <!-- ============ 4. CÓMO PROBARLO ============ -->
-    <section class="section section--alt" id="pruebas">
+    <!-- ============ 4. EVIDENCIAS ============ -->
+    <section class="section section--alt" id="evidencias">
       <div class="container">
         <div class="section__head">
-          <span class="section-number">04 · Cómo probarlo</span>
+          <span class="section-number">04 · Evidencias</span>
+          <h2>Evidencias</h2>
+          <p>Captura del proyecto en Unity. Haz clic en ella para ampliarla.</p>
+        </div>
+
+        <div class="video-grid video-grid--single">
+          <figure class="video-card">
+            <button class="shot" type="button" data-lightbox="assets/img/figuras-mqtt-unity.png" aria-label="Ampliar captura del proyecto en Unity">
+              <img src="assets/img/figuras-mqtt-unity.png" alt="Unity con la escena boton: jerarquía con MQTT_Manager, las seis figuras y TextoFlotante; la vista Game muestra el texto Toca una figura sobre las figuras" loading="lazy">
+            </button>
+            <figcaption>
+              <span class="card__kicker">Unity · Escena boton</span>
+              <h3>Figuras, MQTT_Manager y texto flotante</h3>
+              <p>La jerarquía tiene el objeto MQTT_Manager, las seis figuras, los Building Blocks de Camera Rig y Passthrough y el TextoFlotante. En la vista Game se ven el Candado, el Balón y los Binoculares arriba, el Cubo, la Esfera y el Cilindro abajo y el texto “Toca una figura”. En Assets/Scripts están FiguraTocable y MQTTBasico.</p>
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 5. CÓMO PROBARLO ============ -->
+    <section class="section" id="pruebas">
+      <div class="container">
+        <div class="section__head">
+          <span class="section-number">05 · Cómo probarlo</span>
           <h2>Cómo probarlo</h2>
           <p>La prueba demuestra la comunicación en ambos sentidos: del visor hacia otros dispositivos y de otros dispositivos hacia el visor.</p>
         </div>
@@ -467,11 +492,11 @@ textoRecibido.text = "Tocaste: el Cubo"   → se ve flotando en el Quest</code><
       </div>
     </section>
 
-    <!-- ============ 5. RESULTADOS ============ -->
-    <section class="section" id="resultados">
+    <!-- ============ 6. RESULTADOS ============ -->
+    <section class="section section--alt" id="resultados">
       <div class="container">
         <div class="section__head">
-          <span class="section-number">05 · Resultados</span>
+          <span class="section-number">06 · Resultados</span>
           <h2>Resultados</h2>
         </div>
 
@@ -487,11 +512,11 @@ textoRecibido.text = "Tocaste: el Cubo"   → se ve flotando en el Quest</code><
       </div>
     </section>
 
-    <!-- ============ 6. CONCLUSIÓN ============ -->
-    <section class="section section--alt" id="conclusion">
+    <!-- ============ 7. CONCLUSIÓN ============ -->
+    <section class="section" id="conclusion">
       <div class="container">
         <div class="section__head">
-          <span class="section-number">06 · Conclusión</span>
+          <span class="section-number">07 · Conclusión</span>
           <h2>Aprendizajes y conclusión personal</h2>
         </div>
 
@@ -530,6 +555,12 @@ textoRecibido.text = "Tocaste: el Cubo"   → se ve flotando en el Quest</code><
   </footer>
 
   <button class="to-top" type="button" aria-label="Volver arriba">↑</button>
+
+  <!-- Lightbox de las capturas de evidencia -->
+  <div class="lightbox lightbox--wide" id="lightbox" role="dialog" aria-modal="true" aria-label="Captura ampliada" tabindex="-1" hidden>
+    <button class="lightbox__close" type="button" aria-label="Cerrar">✕</button>
+    <img class="lightbox__img" src="" alt="">
+  </div>
 
   <script src="assets/js/main.js"></script>
   <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
