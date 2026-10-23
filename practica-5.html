@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Práctica 5 · Prácticas Tecnologías Emergentes</title>
+  <meta name="description" content="Práctica 5: figuras tocables con la mano y comunicación por MQTT — hand tracking en Meta Quest 3, cambio de color al tocar y mensajes publicados en un broker MQTT.">
+  <meta name="author" content="Luis Cortés Muñoz">
+  <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="icon" href="assets/img/perfil.jpg">
+</head>
+<body>
+  <a class="skip-link" href="#main">Saltar al contenido</a>
+
+  <header class="site-header">
+    <div class="container nav">
+      <a class="brand" href="index.html">
+        <img class="brand__mark brand__mark--photo" src="assets/img/perfil.jpg" alt="Luis Cortés Muñoz">
+        <span class="brand__text">
+          Tecnologías Emergentes
+          <small>Luis Cortés Muñoz</small>
+        </span>
+      </a>
+
+      <button class="nav__toggle" type="button" aria-expanded="false" aria-controls="nav-links">☰</button>
+
+      <ul class="nav__links" id="nav-links">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="practica-1.html">Práctica 1</a></li>
+        <li><a href="practica-2.html">Práctica 2</a></li>
+        <li><a href="practica-3.html">Práctica 3</a></li>
+        <li><a href="practica-4.html">Práctica 4</a></li>
+        <li><a class="is-active" href="practica-5.html">Práctica 5</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main id="main">
+
+    <!-- ============ ENCABEZADO ============ -->
+    <section class="page-hero">
+      <div class="container">
+        <p class="breadcrumb"><a href="index.html">Inicio</a> / <a href="index.html#practicas">Prácticas</a> / Práctica 5</p>
+        <span class="eyebrow">Práctica 5</span>
+        <h1>Figuras Tocables y Comunicación MQTT</h1>
+        <p class="lead" style="color: var(--text-soft); max-width: 62ch;">
+          Una aplicación de realidad mixta para Meta Quest 3 en la que el usuario toca
+          seis figuras virtuales con su propia mano. Cada toque cambia el color de la
+          figura y envía un mensaje por MQTT que llega a cualquier dispositivo suscrito,
+          incluido el propio visor.
+        </p>
+
+        <ol class="flow" aria-label="Recorrido de un toque">
+          <li><span>Paso 1</span>La mano toca la figura</li>
+          <li><span>Paso 2</span>Cambia de azul a rojo</li>
+          <li><span>Paso 3</span>Se publica por MQTT</li>
+          <li><span>Paso 4</span>El mensaje vuelve al visor</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ============ 1. OBJETIVO ============ -->
+    <section class="section" id="objetivo">
+      <div class="container">
+        <ul class="toc">
+          <li><a href="#objetivo">1. Objetivo</a></li>
+          <li><a href="#conceptos">2. Conceptos</a></li>
+          <li><a href="#desarrollo">3. Desarrollo</a></li>
+          <li><a href="#pruebas">4. Cómo probarlo</a></li>
+          <li><a href="#resultados">5. Resultados</a></li>
+          <li><a href="#conclusion">6. Conclusión</a></li>
+        </ul>
+
+        <div class="section__head">
+          <span class="section-number">01 · Objetivo</span>
+          <h2>¿Qué se buscaba con la práctica?</h2>
+        </div>
+
+        <div class="prose">
+          <p>
+            Con el <em>passthrough</em> activado, el usuario ve su entorno real con seis
+            figuras virtuales flotando delante de él, al alcance de la mano. En la fila de
+            abajo están las geométricas (<strong>Cubo</strong>, <strong>Esfera</strong> y
+            <strong>Cilindro</strong>) y en la de arriba las complejas
+            (<strong>Candado</strong>, <strong>Balón de rugby</strong> y
+            <strong>Binoculares</strong>).
+          </p>
+          <p>
+            El objetivo es doble: detectar el toque con la mano, sin mandos, gracias al
+            <em>hand tracking</em> del visor, y comunicar ese toque a otros dispositivos
+            mediante el protocolo MQTT. Al tocar una figura, esta se pone roja, se publica
+            un mensaje como “Tocaste: el Cubo” y el mensaje regresa del broker al visor,
+            que lo muestra en un texto flotante encima de las figuras.
+          </p>
+        </div>
+
+        <aside class="note" style="margin-top: 1.5rem;">
+          <p>
+            <strong>Herramientas:</strong> Unity 2022.3.58f1, Meta XR SDK 81 (Camera Rig,
+            Passthrough e Interaction SDK para las manos), MQTTnet 4.3.7 instalada con
+            NuGetForUnity, TextMeshPro para el texto flotante y el broker público
+            <code>test.mosquitto.org</code> en el puerto 1883. La escena principal es
+            <code>Assets/Scenes/boton.unity</code>.
+          </p>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ============ 2. CONCEPTOS ============ -->
+    <section class="section section--alt" id="conceptos">
+      <div class="container">
+        <div class="section__head">
+          <span class="section-number">02 · Conceptos</span>
+          <h2>Conceptos utilizados</h2>
+          <p>Los conceptos de realidad mixta, de Unity y de MQTT que se aplicaron directamente en la práctica.</p>
+        </div>
+
+        <div class="cards">
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Realidad mixta</span>
+              <h3>Hand tracking</h3>
+              <p>El visor sigue las manos del usuario sin mandos. El Interaction SDK representa cada mano con la interfaz <code>IHand</code> y entrega la posición de cada articulación.</p>
+            </div>
+          </article>
+
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Unity</span>
+              <h3>Colliders como volumen</h3>
+              <p>No se usan para chocar, sino para saber si un punto está dentro de la figura. A los modelos sin collider se les añade un <em>MeshCollider</em> convexo marcado como trigger.</p>
+            </div>
+          </article>
+
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Unity</span>
+              <h3>Histéresis</h3>
+              <p>La figura sigue “tocada” durante 0.15 s después del último contacto. Así el temblor del tracking en el borde no provoca parpadeos ni mensajes repetidos.</p>
+            </div>
+          </article>
+
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">MQTT</span>
+              <h3>Publicador / suscriptor</h3>
+              <p>Los dispositivos no se hablan directamente: publican mensajes en un <em>broker</em>, que los reparte a todos los que estén suscritos al mismo tema.</p>
+            </div>
+          </article>
+
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">MQTT</span>
+              <h3>Broker y topic</h3>
+              <p>El broker es el servidor intermedio (<code>test.mosquitto.org</code>). El topic es el “canal”, un texto con niveles separados por “/”: <code>clase/Luis/quest3/texto</code>.</p>
+            </div>
+          </article>
+
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Programación</span>
+              <h3>Hilos y cola segura</h3>
+              <p>Los mensajes de MQTTnet llegan en un hilo secundario y Unity solo permite modificar la escena desde el principal. Una <code>ConcurrentQueue</code> los pasa de un hilo a otro.</p>
+            </div>
+          </article>
+
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Programación</span>
+              <h3>async / await</h3>
+              <p>Conectarse, suscribirse y publicar salen a Internet y tardan; hacerlo de forma asíncrona evita que la aplicación se congele mientras tanto.</p>
+            </div>
+          </article>
+
+          <article class="card card--step">
+            <div class="card__body">
+              <span class="card__kicker">Programación</span>
+              <h3>Scripts en C#</h3>
+              <p><strong>FiguraTocable</strong> detecta el toque y cambia el color; <strong>MQTTBasico</strong> se conecta, publica y recibe; <strong>PrepararEscenaFiguras</strong> acomoda la escena desde el editor.</p>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 3. DESARROLLO ============ -->
+    <section class="section" id="desarrollo">
+      <div class="container">
+        <div class="section__head">
+          <span class="section-number">03 · Desarrollo</span>
+          <h2>Desarrollo de la práctica</h2>
+          <p>Primero se resolvió cómo saber que la mano toca una figura; después, cómo avisar de ese toque por MQTT y, por último, qué configurar para que todo funcione en el Quest.</p>
+        </div>
+
+        <div class="stages">
+
+          <!-- Parte 1 -->
+          <article class="stage" id="parte-1">
+            <header class="stage__head">
+              <span class="practice__num">1</span>
+              <div>
+                <span class="card__kicker">Parte 01 · FiguraTocable.cs</span>
+                <h3>La mano toca las figuras y les cambia el color</h3>
+              </div>
+            </header>
+
+            <h4>Idea principal</h4>
+            <p>
+              No se usan colisiones físicas entre la mano y la figura (Rigidbody,
+              <code>OnTrigger</code>, etc.). En su lugar, en cada frame el script le pregunta
+              al SDK de Meta dónde está cada articulación de la mano y comprueba si alguna
+              está <strong>dentro</strong> de la figura. La pregunta que se hace 72 a 90
+              veces por segundo es: “¿hay algún punto de la mano dentro de esta figura?”.
+            </p>
+
+            <h4>Obtener las manos</h4>
+            <p>
+              El script busca en la escena todos los componentes que implementan
+              <code>IHand</code>, descartando <code>HandRef</code>, que solo es una referencia
+              a otra mano y la repetiría. Como las manos tardan un poco en aparecer al
+              iniciar, se buscan una vez por segundo hasta encontrar las dos. La lista es
+              compartida (<code>static</code>) entre las seis figuras, así que la búsqueda se
+              hace una sola vez para todas.
+            </p>
+            <pre class="tree"><code>FindObjectsOfType&lt;MonoBehaviour&gt;()
+    .Where(c =&gt; c is IHand &amp;&amp; !(c is HandRef))</code></pre>
+
+            <h4>Recorrer las articulaciones</h4>
+            <p>
+              Cada mano tiene muchas articulaciones (<code>HandJointId</code>): muñeca, palma,
+              nudillos, falanges y puntas de los dedos. El script las recorre todas y pide su
+              posición en el mundo, por lo que la figura se puede tocar con cualquier parte de
+              la mano y no solo con la punta del índice.
+            </p>
+            <pre class="tree"><code>for (HandJointId joint = HandJointId.HandStart; joint &lt; HandJointId.HandEnd; joint++)
+{
+    if (mano.GetJointPose(joint, out Pose pose) &amp;&amp; PuntoDentro(pose.position))
+        return true;
+}</code></pre>
+
+            <h4>Saber si un punto está dentro de la figura</h4>
+            <p>
+              Para respetar la forma real de cada figura se usan sus colliders. El Cubo, la
+              Esfera y el Cilindro ya traen uno (<em>BoxCollider</em>, <em>SphereCollider</em>
+              y <em>CapsuleCollider</em>). El Candado, el Balón y los Binoculares vienen de un
+              paquete de modelos sin collider, así que al iniciar el script les añade un
+              <em>MeshCollider</em> convexo que envuelve la malla, marcado como trigger para
+              que no empuje nada. El truco es <code>ClosestPoint()</code>: si el punto está
+              dentro del collider, el punto más cercano del collider es el mismo punto.
+            </p>
+            <pre class="tree"><code>if ((c.ClosestPoint(punto) - punto).sqrMagnitude &lt; 1e-8f)
+    return true;   // la articulación está dentro de la figura</code></pre>
+
+            <h4>Evitar parpadeos</h4>
+            <p>
+              Con la mano justo en el borde, el tracking tiembla y la figura cambiaría de color
+              muchas veces por segundo, enviando muchos mensajes. Para evitarlo se guarda el
+              momento del último contacto (<code>ultimaVezDentro</code>) y la figura se
+              considera tocada mientras la mano haya estado dentro en los últimos 0.15 s
+              (<code>tiempoParaSoltar</code>). Además, solo se actúa cuando el estado
+              <em>cambia</em>, no en cada frame.
+            </p>
+            <pre class="tree"><code>bool dentro = Time.time - ultimaVezDentro &lt;= tiempoParaSoltar;
+
+if (dentro == tocando)
+    return;   // no ha cambiado nada, no se hace nada</code></pre>
+
+            <h4>Cambiar el color</h4>
+            <p>
+              Al iniciar, el script toma los materiales con <code>renderer.materials</code>
+              (en plural), lo que crea una copia del material para cada figura; así, al pintar
+              una no se pintan las demás que lo comparten. Dentro de <code>Pintar()</code> se
+              quita la textura (los modelos del paquete usan una textura de paleta que taparía
+              el color) y se asigna azul si no se toca o rojo mientras se toca. Ambos colores y
+              el nombre de cada figura se pueden cambiar desde el Inspector.
+            </p>
+
+            <h4>Flujo en cada frame</h4>
+            <pre class="tree" aria-label="Flujo de FiguraTocable en cada frame"><code>¿Tengo las dos manos? ──no──► buscarlas (máx. una vez por segundo)
+         │
+         ▼
+¿Alguna articulación está dentro de la figura?
+         ├── sí ──► ultimaVezDentro = ahora
+         ▼
+dentro = (ahora − ultimaVezDentro ≤ 0.15 s)
+         │
+¿Cambió el estado? ──no──► no hacer nada
+         │ sí
+         ▼
+Pintar rojo (tocada) o azul (soltada)
+         │
+¿Se acaba de tocar? ──no──► fin (al soltar no se envía nada)
+         │ sí
+         ▼
+mqtt.Publicar("Tocaste: " + nombreFigura)</code></pre>
+          </article>
+
+          <!-- Parte 2 -->
+          <article class="stage" id="parte-2">
+            <header class="stage__head">
+              <span class="practice__num">2</span>
+              <div>
+                <span class="card__kicker">Parte 02 · MQTTBasico.cs</span>
+                <h3>Comunicación por MQTT</h3>
+              </div>
+            </header>
+
+            <h4>Cómo viaja el mensaje</h4>
+            <p>
+              Quien publica no necesita saber quién está escuchando: el broker entrega el
+              mensaje a todos los suscritos al topic. Como el Quest está suscrito al mismo
+              topic en el que publica, recibe de vuelta su propio mensaje; el texto flotante
+              muestra lo que se tocó después del viaje completo Quest → broker → Quest. Si
+              otro dispositivo publica en ese topic, su mensaje también aparece en el visor.
+            </p>
+            <pre class="tree" aria-label="Diagrama del broker MQTT"><code>┌───────────┐  publica "Tocaste: el Cubo"  ┌─────────────────────┐
+│  Quest 3  │ ───────────────────────────► │       BROKER        │
+│  (Unity)  │                              │  test.mosquitto.org │
+│           │ ◄─────────────────────────── │                     │
+└───────────┘  reenvía a los suscritos     └─────────────────────┘
+               al topic                         │            │
+               clase/Luis/quest3/texto          ▼            ▼
+                                           otro Quest   PC / celular
+                                           o compañero  (MQTT Explorer)</code></pre>
+
+            <h4>Crear el cliente y preparar la recepción</h4>
+            <p>
+              La fábrica <code>MqttFactory</code> de MQTTnet crea el cliente. Antes de
+              conectarse se registra el evento <code>ApplicationMessageReceivedAsync</code>,
+              que se ejecuta cada vez que el broker entrega un mensaje. Ese evento corre en un
+              <strong>hilo secundario</strong>, y Unity no permite modificar la escena desde
+              otro hilo, por lo que el mensaje no se escribe directamente en el texto: se
+              guarda en una <code>ConcurrentQueue&lt;string&gt;</code>.
+            </p>
+            <pre class="tree"><code>cliente = new MqttFactory().CreateMqttClient();
+
+cliente.ApplicationMessageReceivedAsync += e =&gt;
+{
+    mensajes.Enqueue(e.ApplicationMessage.ConvertPayloadToString());
+    return Task.CompletedTask;
+};</code></pre>
+
+            <h4>Conectarse y suscribirse</h4>
+            <p>
+              Se indica la dirección del broker y un identificador de cliente único, generado
+              con un GUID aleatorio: si dos clientes usan el mismo, el broker desconecta a uno.
+              La conexión y la suscripción usan <code>await</code> para no congelar la
+              aplicación (<code>Start()</code> está declarado como <code>async void</code>) y
+              van dentro de un <code>try/catch</code>: si no hay Internet se muestra
+              “Error MQTT: …” en la consola en lugar de cerrar la aplicación.
+            </p>
+            <pre class="tree"><code>var opciones = new MqttClientOptionsBuilder()
+    .WithTcpServer("test.mosquitto.org", 1883)
+    .WithClientId("Unity_" + Guid.NewGuid())
+    .Build();
+
+await cliente.ConnectAsync(opciones);
+
+var suscripcion = new MqttClientSubscribeOptionsBuilder()
+    .WithTopicFilter(topic)
+    .Build();
+
+await cliente.SubscribeAsync(suscripcion);</code></pre>
+
+            <h4>Publicar el mensaje</h4>
+            <p>
+              Cuando se toca una figura, <strong>FiguraTocable</strong> llama a
+              <code>mqtt.Publicar("Tocaste: el Cubo")</code>. El método primero comprueba que
+              haya conexión (si no, avisa en consola y no envía), después construye el mensaje
+              con su <strong>topic</strong> (a dónde va) y su <strong>payload</strong> (qué
+              lleva) y lo envía al broker de forma asíncrona. Existe también una versión sin
+              parámetros que envía el texto fijo del Inspector (“Hola desde Unity”) y se puede
+              conectar al <code>OnClick</code> de un botón.
+            </p>
+            <pre class="tree"><code>if (cliente == null || !cliente.IsConnected)
+{
+    Debug.LogWarning("MQTT sin conexión, no se envió: " + texto);
+    return;
+}
+
+var envio = new MqttApplicationMessageBuilder()
+    .WithTopic(topic)       // a dónde va: clase/Luis/quest3/texto
+    .WithPayload(texto)     // qué lleva:  "Tocaste: el Cubo"
+    .Build();
+
+await cliente.PublishAsync(envio);</code></pre>
+
+            <h4>Mostrar el mensaje recibido y cerrar</h4>
+            <p>
+              En cada frame, <code>Update()</code>, que sí corre en el hilo principal, saca
+              los mensajes de la cola y los escribe en el texto flotante de TextMeshPro. Al
+              salir de la escena, <code>OnDestroy()</code> libera el cliente con
+              <code>cliente?.Dispose()</code> para no dejar la conexión abierta.
+            </p>
+            <pre class="tree"><code>if (mensajes.TryDequeue(out string recibido))
+{
+    if (textoRecibido != null)
+        textoRecibido.text = recibido;
+}</code></pre>
+
+            <h4>Recorrido completo de un mensaje</h4>
+            <pre class="tree" aria-label="Recorrido completo de un mensaje"><code>[Mano toca el Cubo]
+       ▼
+FiguraTocable detecta el cambio a "tocada"
+       ▼
+mqtt.Publicar("Tocaste: el Cubo")
+       ▼
+MqttApplicationMessageBuilder (topic + payload)
+       ▼
+cliente.PublishAsync(envio) ──────► BROKER test.mosquitto.org
+                                           │
+                    reenvía a todos los suscritos al topic
+       ┌───────────────────────────────────┘
+       ▼
+ApplicationMessageReceivedAsync (hilo de MQTTnet)
+       ▼
+mensajes.Enqueue("Tocaste: el Cubo")   (cola segura entre hilos)
+       ▼
+Update() en el hilo principal de Unity
+       ▼
+textoRecibido.text = "Tocaste: el Cubo"   → se ve flotando en el Quest</code></pre>
+          </article>
+
+          <!-- Parte 3 -->
+          <article class="stage" id="parte-3">
+            <header class="stage__head">
+              <span class="practice__num">3</span>
+              <div>
+                <span class="card__kicker">Parte 03 · Meta Quest 3</span>
+                <h3>Configuración para que funcione en el visor</h3>
+              </div>
+            </header>
+
+            <ul class="specs">
+              <li><strong>Permiso de Internet:</strong> <code>PlayerSettings.Android.forceInternetPermission = true</code>. Sin él, el Quest no puede conectarse al broker.</li>
+              <li><strong>link.xml:</strong> al compilar con IL2CPP, Unity elimina el código que cree que no se usa. MQTTnet usa reflexión, así que se protege completo.</li>
+              <li><strong>Hand tracking y Building Blocks:</strong> hand tracking activado en el <em>OVRManager</em> y los bloques de Meta Camera Rig, Passthrough y OVRInteractionComprehensive.</li>
+              <li><strong>Acomodo de la escena:</strong> las figuras se escalan a 12 cm y se colocan a 45 cm delante del jugador, en dos filas (1.0 m y 1.25 m de altura), con la herramienta <em>Herramientas → Figuras MR → Preparar escena de figuras</em>.</li>
+            </ul>
+            <pre class="tree"><code>&lt;linker&gt;
+  &lt;assembly fullname="MQTTnet" preserve="all"/&gt;
+&lt;/linker&gt;</code></pre>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 4. CÓMO PROBARLO ============ -->
+    <section class="section section--alt" id="pruebas">
+      <div class="container">
+        <div class="section__head">
+          <span class="section-number">04 · Cómo probarlo</span>
+          <h2>Cómo probarlo</h2>
+          <p>La prueba demuestra la comunicación en ambos sentidos: del visor hacia otros dispositivos y de otros dispositivos hacia el visor.</p>
+        </div>
+
+        <div class="prose">
+          <ol>
+            <li>Conectar el Quest 3 al PC y hacer <em>File → Build and Run</em> en Unity.</li>
+            <li>Asegurarse de que el Quest tiene conexión a Internet.</li>
+            <li>En el PC o en el celular, abrir un cliente MQTT (por ejemplo MQTT Explorer) conectado a <code>test.mosquitto.org:1883</code> y suscribirse a <code>clase/Luis/quest3/texto</code>.</li>
+            <li>Dejar los mandos y tocar las figuras con la mano: la figura se pone roja mientras se toca y vuelve a azul al soltarla; en el cliente MQTT aparece “Tocaste: &lt;figura&gt;” y el texto flotante del Quest muestra el mismo mensaje.</li>
+            <li>Publicar un mensaje desde el cliente MQTT en ese topic: aparece en el texto flotante del Quest.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 5. RESULTADOS ============ -->
+    <section class="section" id="resultados">
+      <div class="container">
+        <div class="section__head">
+          <span class="section-number">05 · Resultados</span>
+          <h2>Resultados</h2>
+        </div>
+
+        <ul class="checklist">
+          <li>Las seis figuras flotan sobre el entorno real</li>
+          <li>Se tocan con cualquier parte de la mano, sin mandos</li>
+          <li>La figura se pone roja al tocarla y azul al soltarla</li>
+          <li>El borde de la figura no provoca parpadeos</li>
+          <li>Cada toque publica “Tocaste: &lt;figura&gt;” en el broker</li>
+          <li>El mensaje llega a MQTT Explorer y regresa al visor</li>
+          <li>Los mensajes externos aparecen en el texto flotante</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ============ 6. CONCLUSIÓN ============ -->
+    <section class="section section--alt" id="conclusion">
+      <div class="container">
+        <div class="section__head">
+          <span class="section-number">06 · Conclusión</span>
+          <h2>Aprendizajes y conclusión personal</h2>
+        </div>
+
+        <div class="prose">
+          <p>
+            Para detectar el toque no hace falta física: basta con comparar las posiciones
+            de las <strong>articulaciones de la mano</strong> con los
+            <strong>colliders</strong> de la figura. Al usar todas las articulaciones, la
+            figura reacciona a cualquier parte de la mano, y guardar el último momento de
+            contacto (<strong>histéresis</strong>) evita los parpadeos y los mensajes
+            repetidos causados por el temblor del tracking.
+          </p>
+          <p>
+            <strong>MQTT</strong> permite comunicar el visor con cualquier otro dispositivo
+            de forma muy sencilla: basta con conocer el broker y el topic. También aprendí
+            que sus mensajes llegan en otro hilo y que una <code>ConcurrentQueue</code> es la
+            forma segura de pasarlos al hilo principal de Unity para mostrarlos.
+          </p>
+          <p>
+            Por último, el broker <code>test.mosquitto.org</code> es público y sin cifrar:
+            cualquiera que conozca el topic puede leer o escribir en él. Sirve para pruebas y
+            para la clase, pero un proyecto real debería usar un broker propio con usuario,
+            contraseña y TLS (puerto 8883).
+          </p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>© <span id="year">2026</span> Luis Cortés Muñoz · Universidad Iberoamericana</span>
+      <a href="index.html">← Volver al índice</a>
+    </div>
+  </footer>
+
+  <button class="to-top" type="button" aria-label="Volver arriba">↑</button>
+
+  <script src="assets/js/main.js"></script>
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>
